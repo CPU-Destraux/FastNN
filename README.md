@@ -1,2 +1,2 @@
 # FastNN
-An Artificial Neural Network on Steroids. This network was built to be expandable and versatile while maintaining speed. Try this network compared to python's PyBrain. Right now it has a demo to add 1 to three separate binary numbers.
+An Artificial Neural Network on Steroids. This network was built to be expandable and versatile while maintaining speed. Try this network compared to python's PyBrain. Right now it has a demo to add 1 to three separate binary numbers. The majority of this code was made expandable from iamtrask's repository on neural networks. However, trask failed to mention how to speed up these neural networks. In response I researched and implimented the adaGrad optimization, Batch Learning, and the TanH activation function.
