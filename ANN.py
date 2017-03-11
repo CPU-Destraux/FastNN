@@ -9,12 +9,12 @@ import random as r
 lay_C = 0
 
 ###     Lists     ###
-nodes = []
-synapses = []
-link = []
-syn_deltas = []
-FD = []
-time_w = []
+nodes = []          #Network Node layers
+synapses = []       #Network Weight layers
+link = []           #Modifies Connections between layers
+syn_deltas = []     #the required change in weight layers
+FD = []             #some network dimensions
+time_w = []         # the time gradient for adaGrad
 
 def sig(x, d=False):
     if d == True:
@@ -30,7 +30,6 @@ def Init(id, hd, od):
     fd = [id] + [hd[0] for i in xrange(hd[1])] + [od]
     FD = fd
     lay_C = len(fd)-1
-    #np.random.seed(0)
     for i in xrange(lay_C):
         synapses.append(2.0*np.random.random((fd[i], fd[i+1]))-1.0)
         link.append(np.random.randint(0,2,size=(fd[i],fd[i+1])))
@@ -51,11 +50,11 @@ def activate(il):
     global nodes
     il = np.array(il)
     try:
-        nodes.append(tanh(np.dot(il.T, (synapses[0]*link[0]))))#*link[0]
+        nodes.append(tanh(np.dot(il.T, (synapses[0]))))#synapses[0]*link[0] for a sparse network
         drop_perc = 0.5
         for i in xrange(lay_C-1):
             nodes[i] *= np.random.binomial([np.ones((FD[i], FD[i+1]))], 1-drop_perc)[0] * (1.0/(1-drop_perc))# dropout
-            nodes.append(tanh(np.dot(nodes[i], (synapses[i+1]*link[i+1]))))#*link[i+1]
+            nodes.append(tanh(np.dot(nodes[i], (synapses[i+1]))))#synapses[i+1]*link[i+1] for a sparse network
     except ValueError:
         pass
 
@@ -116,7 +115,7 @@ for i in xrange(1):
     #print training_set[0]
     while 1:
         err = Batch_Learning(training_set, i+1)
-        if err < 0.0001: #This is the least mean square of the learnt data after running the training set
+        if err < 0.0001: #This is the least mean square of the output data after learning the training set
             end = t.clock()
             break
         #print err
